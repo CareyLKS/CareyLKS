@@ -1,0 +1,19 @@
+.Table {
+  width: 90%;
+  border-collapse: collapse;
+  font-family: Arial;
+  font-size: 14pt;
+}
+
+.Table th, .Table td {
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.mcTable thead th {
+  font-weight: 700;
+}
+
+.Table{
+  background: rgb(255,255,255);
+}
