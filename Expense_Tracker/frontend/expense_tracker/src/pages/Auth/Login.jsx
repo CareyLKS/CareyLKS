@@ -39,7 +39,7 @@ const Login = ()=>{
           value={pwd} onChange={({target})=>setPwd(target.value)} 
           label="Password" placeholder=">8 Characters" type="password"/>
           
-          {err && <p className="text-red-500">{err}</p>}
+          {err && <p className="mt-2 font-medium" style={{ color: "#dc2626" }}>{err}</p>}
 
           <button type="submit" className="btn-primary"> Login </button>
 

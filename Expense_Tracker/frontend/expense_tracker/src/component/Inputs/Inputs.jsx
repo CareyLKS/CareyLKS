@@ -7,14 +7,14 @@ const Input=({value, onChange, placeholder, label, type})=>{
         setShowPwd(!showPwd);
     };
     return(
-        <div>
+        <div className="input-box">
             <label className="text-[13px] text-slate-800" >{label}</label>
-            <div className="">
+            <div className="flex items-center gap-2">
                 <input type={type=='password'? showPwd? 'text':'password':type}
                 placeholder={placeholder}
-                className="w-full bg-transparent outline-0"
+                className="w-full bg-transparent outline-none"
                 value={value}
-                onChange={(e)=>onChange(e)} />
+                onChange={onChange} />
 
                 {type == "password" && (
                     <>

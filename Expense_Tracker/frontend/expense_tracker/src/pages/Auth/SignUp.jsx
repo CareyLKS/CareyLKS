@@ -13,10 +13,34 @@ const SignUp = ()=>{
   const [repwd,setRePwd]= useState("");
 
   const [err, setErr]=useState(null);
-  const navigaste = useNavigate();
+  const navigate = useNavigate();
 
   //signup form
   const handelSignUp=async(e)=>{
+    e.preventDefault();
+    setErr(null);
+    if (fName==""){
+      setErr("Please input your name.");
+      return;
+    }
+    if(!validateEmail(email)){
+      setErr("Please input valid email.");
+      return;
+    }
+    if (pwd==""){
+      setErr(`Please enter password`);
+      return;
+    }
+    if (!repwd){
+      setErr("Please enter the Re-passward");
+      return;
+    }
+    if  (repwd!=pwd){
+      setErr(`Password not match!`);
+      return;
+    }
+    
+    //SignUp API call
   }
   return (
     <AuthLayout>
@@ -25,34 +49,32 @@ const SignUp = ()=>{
 
         <ProfilePic image={proPic} setImage={setProPic}/>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 m-3">
           <Input
           value={fName} onChange={({target})=>setfName(target.value)} 
           label="Full Name" placeholder="Carey Lee" type="text"/>
           
           <Input
           value={email} onChange={({target})=>setEmail(target.value)} 
-          label="Email Address" placeholder="abc@mail.com" type="text"/>
+          label="Email Address" placeholder="abc@mail.com" type="email"/>
 
-            <div className="col-span-2">
-              <Input
-              value={pwd} onChange={({target})=>setPwd(target.value)} 
-              label="Password" placeholder=">8 Characters" type="password"/>
+          <Input
+          value={pwd} onChange={({target})=>setPwd(target.value)} 
+          label="Password" placeholder=">8 Characters" type="password"/>
 
-              <Input
-              value={repwd} onChange={({target})=>setRePwd(target.value)} 
-              label="Re-Password" placeholder=">8 Characters" type="password"/>
+          <Input
+          value={repwd} onChange={({target})=>setRePwd(target.value)} 
+          label="Re-Password" placeholder=">8 Characters" type="password"/>
 
-           </div>
           
         </div>
-        {err && <p className="text-red-500">{err}</p>}
+        {err && <p className="mt-2 font-medium" style={{ color: "#dc2626" }}>{err}</p>}
 
           <button type="submit" className="btn-primary"> SignUp </button>
          { <p className="">
-                    Have an account?  
-                    <Link className="" to="/login"> Login</Link>
-                  </p> }
+          Have an account?  
+          <Link className="" to="/login"> Login</Link>
+          </p> }
       </form>
     </AuthLayout>
   )
