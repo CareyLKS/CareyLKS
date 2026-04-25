@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import AuthLayout from "../../component/Layout/AuthLayout.jsx"
 import Input from "../../component/Inputs/Inputs.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import { validateEmail } from "../../Utils/helper.js";
 import ProfilePic from "../../component/Inputs/ProPic.jsx";
+import { API_PATHS } from "../../Utils/apiPath.js";
+import axiosInstance from "../../Utils/axiosInstance.js";
+import { userContext } from "../../context/UserContext.jsx";
+import uploadImage from "../../Utils/uploadImage";
+
 
 const SignUp = ()=>{
   const [proPic,setProPic]= useState("");
@@ -12,6 +17,8 @@ const SignUp = ()=>{
   const [pwd,setPwd]= useState("");
   const [repwd,setRePwd]= useState("");
 
+  const {updUser}=useContext(userContext);
+
   const [err, setErr]=useState(null);
   const navigate = useNavigate();
 
@@ -19,6 +26,7 @@ const SignUp = ()=>{
   const handelSignUp=async(e)=>{
     e.preventDefault();
     setErr(null);
+    let proURL = "";
     if (fName==""){
       setErr("Please input your name.");
       return;
@@ -41,6 +49,27 @@ const SignUp = ()=>{
     }
     
     //SignUp API call
+    try {
+
+      if (proPic){
+        const imgUpRes=await uploadImage(proPic);
+        proURL=imgUpRes.imageURL || "";
+      }
+
+      const resp = await axiosInstance.post(API_PATHS.AUTH.REGISTER,{
+        fName, email, pwd, proPicURL: proURL,
+      });
+      const {token, user}=resp.data;
+      if (token){
+        localStorage.setItem("token",token);
+        updUser(user);
+        navigate("/dashboard");
+      }
+    } catch (err) {
+      if (err.response && err.response.data.message){
+        setErr(err.response.data.message);
+      } else setErr("Something Wrong, Please try again.");
+    }
   }
   return (
     <AuthLayout>
