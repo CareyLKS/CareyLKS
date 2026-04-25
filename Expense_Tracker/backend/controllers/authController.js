@@ -8,7 +8,7 @@ const genToken = (id)=>{
 
 //Reg User
 exports.regUser = async(req,res)=>{
-    const {fName, email, pwd, proPicURL}=req.body;
+    const {fName, email, pwd, proPicURL, proURL}=req.body;
     //check for missing fields
     if (!fName || !email || !pwd) {return res.status(400).json({message:"All fields are required"})};
     try{
@@ -19,10 +19,13 @@ exports.regUser = async(req,res)=>{
         }
         //create the user
         const user=await User.create({
-            fName, email,pwd,proPicURL,
+            fName, email,pwd,proPicURL: proPicURL || proURL || null,
         });
+        const userObj = user.toObject();
+        delete userObj.pwd;
         res.status(201).json({
             id:user._id,
+            user: userObj,
             token: genToken(user._id),
         })
     } catch (err){
@@ -38,7 +41,9 @@ exports.loginUser = async(req,res)=>{
         const user=await User.findOne({email});
         if (!user|| !(await user.comparePwd(pwd))) {return res.status(400)
             .json({message:"Not registered or Wrong password"})}
-        res.status(200).json({id:user._id, user, token:genToken(user._id)});
+        const userObj = user.toObject();
+        delete userObj.pwd;
+        res.status(200).json({id:user._id, user: userObj, token:genToken(user._id)});
     } catch(err){
         res.status(500).json({message: "Error Login user",error:err.message});
     }
